@@ -572,7 +572,7 @@ export function getWebviewContent(webview: vscode.Webview, nonce: string): strin
   <span class="header-logo">🔐</span>
   <div style="flex:1">
     <div class="header-title">Authalyzer</div>
-    <div class="header-subtitle">Passkey &amp; Authentication Security</div>
+    <div class="header-subtitle">Authentication Security</div>
   </div>
   <button class="btn btn-primary" id="analyzeBtn">⚡ Analyze Workspace</button>
 </div>
@@ -1576,7 +1576,7 @@ export function getWebviewContent(webview: vscode.Webview, nonce: string): strin
         </div>
       \` : '';
       return \`
-        <div class="tech-card" data-name="\${escAttr(t.name)}" onclick="toggleTechDetail('\${escAttr(t.name)}')">
+        <div class="tech-card" data-name="\${escAttr(t.name)}" style="cursor:pointer">
           <div class="tech-name">\${escHtml(t.displayName)}</div>
           <div style="margin-bottom:6px"><span class="badge badge-\${t.type === 'library' ? 'low' : 'info'}">\${escHtml(t.type)}</span></div>
           <div class="tech-desc">\${escHtml(t.description)}</div>
@@ -1586,6 +1586,9 @@ export function getWebviewContent(webview: vscode.Webview, nonce: string): strin
         </div>
       \`;
     }).join('');
+    document.getElementById('tech-grid').querySelectorAll('.tech-card').forEach(card => {
+      card.addEventListener('click', () => toggleTechDetail(card.dataset.name));
+    });
   }
 
   function toggleTechDetail(name) {
@@ -1647,7 +1650,7 @@ export function getWebviewContent(webview: vscode.Webview, nonce: string): strin
       <div class="jwt-result">
         <div class="section-title">Generated Token</div>
         <div class="jwt-token-display">\${tokenHtml}</div>
-        <button class="btn btn-secondary" onclick="copyToken('\${escAttr(data.token)}')" style="align-self:flex-start;font-size:0.75rem">📋 Copy Token</button>
+        <button class="btn btn-secondary" id="copyTokenBtn" style="align-self:flex-start;font-size:0.75rem">📋 Copy Token</button>
 
         <div class="section-title" style="margin-top:4px">Decoded Parts</div>
         <div class="jwt-parts">
@@ -1676,6 +1679,10 @@ export function getWebviewContent(webview: vscode.Webview, nonce: string): strin
         <div class="sim-logs">\${renderLogs(data.logs)}</div>
       </div>
     \`;
+
+    // Attach copy button listener after HTML is in DOM
+    const copyBtn = document.getElementById('copyTokenBtn');
+    if (copyBtn) copyBtn.addEventListener('click', () => copyToken(data.token));
 
     // Auto-fill verify fields
     document.getElementById('jwt-verify-token').value = data.token;
@@ -1824,13 +1831,16 @@ export function getWebviewContent(webview: vscode.Webview, nonce: string): strin
 
   function showError(message) {
     document.getElementById('overview-loading').style.display = 'none';
-    document.getElementById('overview-empty').style.display = 'flex';
-    document.getElementById('overview-empty').innerHTML = \`
+    const emptyEl = document.getElementById('overview-empty');
+    emptyEl.style.display = 'flex';
+    emptyEl.innerHTML = \`
       <div class="icon">⚠️</div>
       <strong>Error</strong>
       <span>\${escHtml(message)}</span>
-      <button class="btn btn-secondary" onclick="analyzeWorkspace()" style="margin-top:10px">Try Again</button>
+      <button class="btn btn-secondary" id="errorRetryBtn" style="margin-top:10px">Try Again</button>
     \`;
+    const retryBtn = document.getElementById('errorRetryBtn');
+    if (retryBtn) retryBtn.addEventListener('click', analyzeWorkspace);
   }
 
   function escHtml(str) {
