@@ -2,7 +2,7 @@
   "name": "authalyzer",
   "displayName": "Authalyzer",
   "description": "An Extension to analyze Authentication Patterns",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "publisher": "authalyzer",
   "engines": {
     "vscode": "^1.85.0"
