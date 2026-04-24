@@ -1,0 +1,203 @@
+{
+  "name": "authalyzer",
+  "displayName": "Authalyzer",
+  "description": "An Extension to analyze Authentication Patterns",
+  "version": "0.1.0",
+  "publisher": "authalyzer",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other",
+    "Linters",
+    "Visualization"
+  ],
+  "keywords": [
+    "authentication",
+    "passkey",
+    "webauthn",
+    "jwt",
+    "oauth",
+    "security",
+    "fido2"
+  ],
+  "icon": "resources/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/example/auth-flow-analyzer"
+  },
+  "main": "./out/extension.js",
+  "activationEvents": [
+    "onLanguage:typescript",
+    "onLanguage:javascript",
+    "onLanguage:typescriptreact",
+    "onLanguage:javascriptreact",
+    "onLanguage:python",
+    "onLanguage:java"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "authAnalyzer.showDashboard",
+        "title": "Show Auth Flow Dashboard",
+        "category": "Auth Analyzer",
+        "icon": "$(shield)"
+      },
+      {
+        "command": "authAnalyzer.analyzeWorkspace",
+        "title": "Analyze Workspace Authentication Flows",
+        "category": "Auth Analyzer",
+        "icon": "$(search)"
+      },
+      {
+        "command": "authAnalyzer.analyzeFile",
+        "title": "Analyze Security of This File",
+        "category": "Auth Analyzer",
+        "icon": "$(inspect)"
+      },
+      {
+        "command": "authAnalyzer.explainFlow",
+        "title": "Explain This Authentication Flow",
+        "category": "Auth Analyzer",
+        "icon": "$(book)"
+      },
+      {
+        "command": "authAnalyzer.openSimulation",
+        "title": "Open Auth Simulation Panel",
+        "category": "Auth Analyzer",
+        "icon": "$(play)"
+      },
+      {
+        "command": "authAnalyzer.clearDiagnostics",
+        "title": "Clear Auth Analyzer Diagnostics",
+        "category": "Auth Analyzer",
+        "icon": "$(clear-all)"
+      },
+      {
+        "command": "authAnalyzer.navigateTo",
+        "title": "Navigate to Dashboard Section",
+        "category": "Auth Analyzer"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "authAnalyzer.analyzeFile",
+          "when": "editorLangId == javascript || editorLangId == typescript || editorLangId == javascriptreact || editorLangId == typescriptreact || editorLangId == python || editorLangId == java || editorLangId == kotlin",
+          "group": "authAnalyzer@1"
+        },
+        {
+          "command": "authAnalyzer.explainFlow",
+          "when": "editorLangId == javascript || editorLangId == typescript || editorLangId == javascriptreact || editorLangId == typescriptreact || editorLangId == python || editorLangId == java || editorLangId == kotlin",
+          "group": "authAnalyzer@2"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "authAnalyzer.showDashboard"
+        },
+        {
+          "command": "authAnalyzer.analyzeWorkspace"
+        },
+        {
+          "command": "authAnalyzer.openSimulation"
+        },
+        {
+          "command": "authAnalyzer.clearDiagnostics"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "authAnalyzer.analyzeFile",
+          "when": "editorLangId == javascript || editorLangId == typescript || editorLangId == javascriptreact || editorLangId == typescriptreact || editorLangId == python || editorLangId == java || editorLangId == kotlin",
+          "group": "navigation"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "authAnalyzerSidebar",
+          "title": "Authalyzer",
+          "icon": "resources/lock.svg"
+        }
+      ]
+    },
+    "views": {
+      "authAnalyzerSidebar": [
+        {
+          "id": "authAnalyzer.overview",
+          "name": "Overview",
+          "type": "tree"
+        },
+        {
+          "id": "authAnalyzer.actions",
+          "name": "Actions",
+          "type": "tree"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "authAnalyzer.overview",
+        "contents": "No analysis results yet.\n\nRun a workspace scan to detect auth vulnerabilities, map security flows, and analyze password handling.\n\n[$(search) Analyze Workspace](command:authAnalyzer.analyzeWorkspace)\n\n[$(shield) Open Dashboard](command:authAnalyzer.showDashboard)\n\nOr open a file and run **Analyze This File** from the editor context menu."
+      }
+    ],
+    "configuration": {
+      "title": "Authalyzer",
+      "properties": {
+        "authAnalyzer.enableDiagnostics": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable inline security diagnostics in the editor."
+        },
+        "authAnalyzer.minimumSeverity": {
+          "type": "string",
+          "enum": [
+            "critical",
+            "high",
+            "medium",
+            "low",
+            "info"
+          ],
+          "default": "low",
+          "description": "Minimum severity level to report."
+        },
+        "authAnalyzer.excludePatterns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "**/node_modules/**",
+            "**/dist/**",
+            "**/build/**",
+            "**/.next/**",
+            "**/coverage/**"
+          ],
+          "description": "Glob patterns to exclude from analysis."
+        },
+        "authAnalyzer.autoAnalyzeOnSave": {
+          "type": "boolean",
+          "default": false,
+          "description": "Automatically re-analyze the file on save."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "eslint": "^8.56.0",
+    "typescript": "^5.3.3"
+  }
+}
