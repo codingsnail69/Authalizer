@@ -48,6 +48,7 @@ The extension automatically detects relevant authentication logic across differe
   * Weak password handling
   * Missing validation steps
   * Insecure token usage
+  * Unsecure encryption Usage
   * Bad session management practices
 * Provides **actionable hints** to improve your system using **official security standards** (e.g., industry best practices)
 
@@ -79,6 +80,8 @@ The extension automatically detects relevant authentication logic across differe
   * Passkeys (WebAuthn)
   * JWT
   * Session-based authentication
+  * OAUTH 2.0
+  * Password-based authentication
 * Learn how they work and how to implement them securely
 
 ---
@@ -128,4 +131,4 @@ It does not replace professional security audits but serves as a powerful develo
 
 ## 📄 License
 
-This project is licensed under the MIT-License
+This project is licensed under the MIT License
